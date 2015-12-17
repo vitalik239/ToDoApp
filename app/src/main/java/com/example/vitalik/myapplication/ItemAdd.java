@@ -25,6 +25,8 @@ public class ItemAdd extends AppCompatActivity {
         final EditText editQuantity = (EditText) findViewById(R.id.editTextQuantity);
         final EditText editDescription = (EditText) findViewById(R.id.editTextDescription);
 
+        setResult(RESULT_OK);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,8 +43,6 @@ public class ItemAdd extends AppCompatActivity {
                     String title = editTitle.getText().toString();
                     Integer quantity = Integer.parseInt(editQuantity.getText().toString());
                     String description = editDescription.getText().toString();
-
-                    Log.w("MyLog", "added " + editTitle.getText() + " " + editQuantity.getText());
 
                     MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
                             title, quantity, description);

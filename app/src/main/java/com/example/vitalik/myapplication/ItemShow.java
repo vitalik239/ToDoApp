@@ -11,62 +11,67 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
-public class ItemEdit extends AppCompatActivity {
-    private EditText editTitle;
-    private EditText editQuantity;
-    private EditText editDescription;
+public class ItemShow extends AppCompatActivity {
+    private TextView Title;
+    private TextView Quantity;
+    private TextView Description;
     private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_edit);
+        setContentView(R.layout.activity_item_show);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        editTitle = (EditText) findViewById(R.id.editTitle);
-        editQuantity = (EditText) findViewById(R.id.editQuantity);
-        editDescription = (EditText) findViewById(R.id.editDescription);
-
         id = getIntent().getStringExtra("id");
-        showById(id);
 
-        final Intent answerIntent = new Intent();
-        setResult(RESULT_OK, answerIntent);
+        Title = (TextView) findViewById(R.id.Title);
+        Quantity = (TextView) findViewById(R.id.Quantity);
+        Description = (TextView) findViewById(R.id.Description);
+
+        ShowById(id);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.mDatabaseHelper.delFromDatabase(MainActivity.mSqLiteDatabase,
-                        Integer.parseInt(id));
-                String title = editTitle.getText().toString();
-                Integer quantity = Integer.parseInt(editQuantity.getText().toString());
-                String description = editDescription.getText().toString();
-
-                String newId = "" + MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
-                        title, quantity, description);
-                answerIntent.putExtra("newId", newId);
-                finish();
+                Intent intent = new Intent(ItemShow.this, ItemEdit.class);
+                intent.putExtra("id", id);
+                startActivityForResult(intent, 200);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void showById(String id) {
-        String[] show = {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 200) {
+            Log.w("MyLog", "fail in id");
+
+            id = data.getStringExtra("newId");
+            Log.w("MyLog", "id = " + id);
+            ShowById(id);
+        }
+    }
+
+    public void ShowById(String id) {
+        String[] projection = {
                 BaseColumns._ID,
                 DatabaseHelper.TITLE_COLUMN,
                 DatabaseHelper.DESCRIPTION_COLUMN,
                 DatabaseHelper.QUANTITY_COLUMN
         };
 
+
         Cursor c = null;
         try {
             c = MainActivity.mSqLiteDatabase.query(
                     DatabaseHelper.DATABASE_TABLE,
-                    show,
+                    projection,
                     BaseColumns._ID + " = " + id,
                     null,
                     null,
@@ -89,9 +94,11 @@ public class ItemEdit extends AppCompatActivity {
                 c.getColumnIndexOrThrow(DatabaseHelper.QUANTITY_COLUMN)
         );
 
-        editTitle.setText(title.toCharArray(), 0, title.length());
-        editQuantity.setText(quantity.toCharArray(), 0, quantity.length());
-        editDescription.setText(description.toCharArray(), 0, description.length());
+        setResult(RESULT_OK);
+
+        Title.setText(title.toCharArray(), 0, title.length());
+        Quantity.setText(quantity.toCharArray(), 0, quantity.length());
+        Description.setText(description.toCharArray(), 0, description.length());
     }
 
 
