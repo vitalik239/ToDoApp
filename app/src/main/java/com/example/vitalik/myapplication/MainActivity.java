@@ -13,15 +13,21 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+
+import java.sql.SQLException;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public static DatabaseHelper mDatabaseHelper;
@@ -37,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mDatabaseHelper = new DatabaseHelper(this, "mydatabase.db", null, 1);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
 
-        String[] from = new String[] { DatabaseHelper.TITLE_COLUMN };
-        int[] to = new int[] { R.id.lvText };
+        String[] from = new String[]{DatabaseHelper.TITLE_COLUMN};
+        int[] to = new int[]{R.id.lvText};
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from, to, 0);
         lvData = (ListView) findViewById(R.id.listView);
@@ -55,6 +61,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivityForResult(intent, 100);
             }
         });
+
+
+        EditText myFilter = (EditText) findViewById(R.id.editText);
+        myFilter.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                mAdapter.getFilter().filter(s.toString());
+            }
+        });
+
+        mAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence constraint) {
+                return mDatabaseHelper.searchByName(mSqLiteDatabase, constraint.toString());
+            }
+        });
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

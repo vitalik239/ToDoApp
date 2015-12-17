@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.sql.SQLException;
+
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
     public static final String DATABASE_NAME = "mydatabase.db";
@@ -32,6 +34,25 @@ public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
+    }
+
+    public Cursor searchByName(SQLiteDatabase db, String inputText) {
+        Cursor mCursor = null;
+        if (inputText == null  ||  inputText.length () == 0)  {
+            mCursor = db.query(DATABASE_TABLE, new String[] { BaseColumns._ID,
+                             TITLE_COLUMN, QUANTITY_COLUMN, DESCRIPTION_COLUMN},
+                    null, null, null, null, null);
+        }
+        else {
+            mCursor = db.query(true, DATABASE_TABLE, new String[] { BaseColumns._ID,
+                             TITLE_COLUMN, QUANTITY_COLUMN, DESCRIPTION_COLUMN},
+                    TITLE_COLUMN + " like '%" + inputText + "%'", null,
+                    null, null, null, null);
+        }
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
