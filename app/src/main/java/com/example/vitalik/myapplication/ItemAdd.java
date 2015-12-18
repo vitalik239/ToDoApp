@@ -44,8 +44,9 @@ public class ItemAdd extends AppCompatActivity {
                     Integer quantity = Integer.parseInt(editQuantity.getText().toString());
                     String description = editDescription.getText().toString();
 
-                    MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
+                    long id = MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
                             title, quantity, description);
+                    Request.sendRequest(-1, id, title, quantity, description);
                     finish();
                 }
             }

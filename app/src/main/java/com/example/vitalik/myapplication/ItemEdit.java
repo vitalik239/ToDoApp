@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ItemEdit extends AppCompatActivity {
     private EditText editTitle;
@@ -39,16 +40,27 @@ public class ItemEdit extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.mDatabaseHelper.delFromDatabase(MainActivity.mSqLiteDatabase,
-                        Integer.parseInt(id));
-                String title = editTitle.getText().toString();
-                Integer quantity = Integer.parseInt(editQuantity.getText().toString());
-                String description = editDescription.getText().toString();
+                if (editTitle.getText().length() == 0) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter title!", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else if (editQuantity.getText().length() == 0) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter quantity!", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    MainActivity.mDatabaseHelper.delFromDatabase(MainActivity.mSqLiteDatabase,
+                            Integer.parseInt(id));
+                    String title = editTitle.getText().toString();
+                    Integer quantity = Integer.parseInt(editQuantity.getText().toString());
+                    String description = editDescription.getText().toString();
 
-                String newId = "" + MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
-                        title, quantity, description);
-                answerIntent.putExtra("newId", newId);
-                finish();
+                    String newId = "" + MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
+                            title, quantity, description);
+                    answerIntent.putExtra("newId", newId);
+                    Request.sendRequest(Long.parseLong(id), Long.parseLong(newId), title, quantity, description);
+                    finish();
+                }
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
