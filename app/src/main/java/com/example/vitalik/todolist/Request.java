@@ -1,4 +1,4 @@
-package com.example.vitalik.myapplication;
+package com.example.vitalik.todolist;
 
 import android.util.Log;
 

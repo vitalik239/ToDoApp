@@ -1,4 +1,4 @@
-package com.example.vitalik.myapplication;
+package com.example.vitalik.todolist;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
-
-import java.sql.SQLException;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
