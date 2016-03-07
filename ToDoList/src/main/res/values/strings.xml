@@ -1,8 +1,8 @@
 <resources>
-    <string name="add_record">Add Itemь</string>
+    <string name="add_record">Add Item</string>
     <string name="edit_record">Edit</string>
     <string name="delete_record">Delete</string>
-    <string name="app_name">Catalog</string>
+    <string name="app_name">ToDoList</string>
     <string name="action_settings">Settings</string>
     <string name="update">Update</string>
     <string name="title_activity_item_edit">ItemEdit</string>

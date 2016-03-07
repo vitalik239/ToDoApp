@@ -1,4 +1,4 @@
-package com.example.vitalik.myapplication;
+package com.example.vitalik.todolist;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,18 +9,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import java.sql.SQLException;
-
 
 public class DatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
-    public static final String DATABASE_NAME = "mydatabase.db";
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_TABLE = "Catalog";
-    public static final int DELETE_ID = 2;
-    public static final int EDIT_ID = 1;
-    public static final String TITLE_COLUMN = "title";
-    public static final String DESCRIPTION_COLUMN = "description";
-    public static final String QUANTITY_COLUMN = "quantity";
+    private static final String DATABASE_NAME = "tasklist.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_TABLE = "Tasks";
+    private static final int DELETE_ID = 2;
+    private static final int EDIT_ID = 1;
+    private static final String TITLE_COLUMN = "title";
+    private static final String DESCRIPTION_COLUMN = "description";
+    private static final String QUANTITY_COLUMN = "quantity";
 
     private static final String DATABASE_CREATE_SCRIPT = "create table "
             + DATABASE_TABLE + " (" + BaseColumns._ID

@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.vitalik.todolist.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -19,31 +19,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ItemAdd"
+            android:name="com.example.vitalik.todolist.ItemAdd"
             android:label="@string/title_activity_item_edit"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.vitalik.myapplication.MainActivity" />
+                android:value="com.example.vitalik.todolist.MainActivity" />
         </activity>
         <activity
-            android:name=".ItemEdit"
+            android:name="com.example.vitalik.todolist.ItemEdit"
             android:label="@string/title_activity_item_edit"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.vitalik.myapplication.MainActivity" />
+                android:value="com.example.vitalik.todolist.MainActivity" />
         </activity>
         <activity
-            android:name=".ItemShow"
+            android:name="com.example.vitalik.todolist.ItemShow"
             android:label="@string/title_activity_item_show"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.vitalik.myapplication.MainActivity" />
+                android:value="com.example.vitalik.todolist.MainActivity" />
         </activity>
     </application>
 
