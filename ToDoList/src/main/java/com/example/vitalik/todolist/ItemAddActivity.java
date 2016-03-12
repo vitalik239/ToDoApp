@@ -1,5 +1,7 @@
 package com.example.vitalik.todolist;
 
+import com.example.vitalik.todolist.database.DBContract;
+import com.example.vitalik.todolist.database.DBEditor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +12,8 @@ import android.widget.Toast;
 
 import com.example.vitalik.myapplication.R;
 
-public class ItemAdd extends AppCompatActivity {
+public class ItemAddActivity extends AppCompatActivity {
+    private DBEditor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +28,8 @@ public class ItemAdd extends AppCompatActivity {
 
         setResult(RESULT_OK);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addFab = (FloatingActionButton) findViewById(R.id.fab);
+        addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editTitle.getText().length() == 0) {
@@ -42,7 +45,9 @@ public class ItemAdd extends AppCompatActivity {
                     Integer quantity = Integer.parseInt(editQuantity.getText().toString());
                     String description = editDescription.getText().toString();
 
-                    long id = MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
+                    editor = new DBEditor();
+
+                    long id = editor.addToDatabase(MainActivity.mSqLiteDatabase,
                             title, quantity, description);
                     Request.sendRequest(-1, id, title, quantity, description);
                     finish();

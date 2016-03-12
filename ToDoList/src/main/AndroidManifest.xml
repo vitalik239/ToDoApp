@@ -7,6 +7,7 @@
         android:icon="@drawable/catalog_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:debuggable="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.vitalik.todolist.MainActivity"
@@ -19,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.vitalik.todolist.ItemAdd"
+            android:name="com.example.vitalik.todolist.ItemAddActivity"
             android:label="@string/title_activity_item_edit"
             android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -28,7 +29,7 @@
                 android:value="com.example.vitalik.todolist.MainActivity" />
         </activity>
         <activity
-            android:name="com.example.vitalik.todolist.ItemEdit"
+            android:name="com.example.vitalik.todolist.ItemEditActivity"
             android:label="@string/title_activity_item_edit"
             android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -37,7 +38,7 @@
                 android:value="com.example.vitalik.todolist.MainActivity" />
         </activity>
         <activity
-            android:name="com.example.vitalik.todolist.ItemShow"
+            android:name="com.example.vitalik.todolist.ItemShowActivity"
             android:label="@string/title_activity_item_show"
             android:parentActivityName="com.example.vitalik.todolist.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >

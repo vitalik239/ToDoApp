@@ -23,24 +23,32 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.database.DBContract;
+import com.example.vitalik.todolist.database.DBEditor;
+import com.example.vitalik.todolist.database.DBHelper;
+import com.example.vitalik.todolist.database.DBShow;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    public static DatabaseHelper mDatabaseHelper;
+    public static DBHelper mDBHelper;
+    public static DBShow shower;
+    public static DBEditor editor;
     public static SQLiteDatabase mSqLiteDatabase;
     public static SimpleCursorAdapter mAdapter;
     public static ListView lvData;
+    private static final int returnCode = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDatabaseHelper = new DatabaseHelper(this, "mydatabase.db", null, 1);
-        mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        mDBHelper = new DBHelper(this, DBContract.DATABASE_NAME, null, 1);
+        mSqLiteDatabase = mDBHelper.getWritableDatabase();
 
-        String[] from = new String[]{DatabaseHelper.TITLE_COLUMN};
+        String[] from = new String[]{DBContract.Columns.TITLE};
         int[] to = new int[]{R.id.lvText};
 
         mAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from, to, 0);
@@ -52,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Intent intent = new Intent(MainActivity.this, ItemShow.class);
-                Log.w("MyLog", "" + mAdapter.getItemId(position));
-                intent.putExtra("id", "" + mAdapter.getItemId(position));
-                startActivityForResult(intent, 100);
+                Intent intent = new Intent(MainActivity.this, ItemShowActivity.class);
+                Log.w("MyLog", Long.toString(mAdapter.getItemId(position)));
+                intent.putExtra("id", Long.toString(mAdapter.getItemId(position)));
+                startActivityForResult(intent, returnCode);
             }
         });
 
@@ -79,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
-                return mDatabaseHelper.searchByName(mSqLiteDatabase, constraint.toString());
+                shower = new DBShow();
+                return shower.searchByName(mSqLiteDatabase, constraint.toString());
             }
         });
 
@@ -87,12 +96,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addFab = (FloatingActionButton) findViewById(R.id.fab);
+        addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ItemAdd.class);
-                startActivityForResult(intent, 100);
+                Intent intent = new Intent(MainActivity.this, ItemAddActivity.class);
+                startActivityForResult(intent, returnCode);
             }
         });
     }
@@ -100,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 100) {
+        if (resultCode == RESULT_OK && requestCode == returnCode) {
             Log.w("MyLog", "after activity");
             updateCursor();
         }
@@ -113,22 +122,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, DatabaseHelper.DELETE_ID, 0, R.string.delete_record);
-        menu.add(0, DatabaseHelper.EDIT_ID, 0, R.string.edit_record);
+        menu.add(0, DBContract.DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, DBContract.EDIT_ID, 0, R.string.edit_record);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == DatabaseHelper.EDIT_ID) {
+        if (item.getItemId() == DBContract.EDIT_ID) {
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
                     .getMenuInfo();
-            Intent intent = new Intent(MainActivity.this, ItemEdit.class);
+            Intent intent = new Intent(MainActivity.this, ItemEditActivity.class);
             intent.putExtra("id", "" + acmi.id);
             startActivityForResult(intent, 100);
             return true;
-        } else if (item.getItemId() == DatabaseHelper.DELETE_ID) {
+        } else if (item.getItemId() == DBContract.DELETE_ID) {
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
                     .getMenuInfo();
-            mDatabaseHelper.delFromDatabase(mSqLiteDatabase, acmi.id);
+            editor = new DBEditor();
+            editor.delFromDatabase(mSqLiteDatabase, acmi.id);
             updateCursor();
             return true;
         }
@@ -179,7 +189,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         @Override
         public Cursor loadInBackground() {
-            return mDatabaseHelper.getAllData(mSqLiteDatabase);
+            shower = new DBShow();
+            return shower.getAllData(mSqLiteDatabase);
         }
     }
+
+
+    public void onDoneClick(View view) {
+        View v = (View) view.getParent();
+        TextView taskTextView = (TextView) v.findViewById(R.id.lvText);
+        String task = taskTextView.getText().toString();
+
+        String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+                DBContract.DATABASE_TABLE,
+                DBContract.Columns.TITLE,
+                task);
+
+
+        SQLiteDatabase sqlDB = mDBHelper.getWritableDatabase();
+        sqlDB.execSQL(sql);
+        updateCursor();
+    }
+
 }

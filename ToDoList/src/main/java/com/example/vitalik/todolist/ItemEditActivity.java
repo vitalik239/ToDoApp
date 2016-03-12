@@ -13,12 +13,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.database.DBContract;
+import com.example.vitalik.todolist.database.DBEditor;
+import com.example.vitalik.todolist.database.DBHelper;
 
-public class ItemEdit extends AppCompatActivity {
+public class ItemEditActivity extends AppCompatActivity {
     private EditText editTitle;
     private EditText editQuantity;
     private EditText editDescription;
     private String id;
+    private DBEditor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,8 @@ public class ItemEdit extends AppCompatActivity {
         final Intent answerIntent = new Intent();
         setResult(RESULT_OK, answerIntent);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        final FloatingActionButton editFab = (FloatingActionButton) findViewById(R.id.fab);
+        editFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editTitle.getText().length() == 0) {
@@ -50,14 +54,15 @@ public class ItemEdit extends AppCompatActivity {
                             "Enter quantity!", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
-                    MainActivity.mDatabaseHelper.delFromDatabase(MainActivity.mSqLiteDatabase,
+                    editor = new DBEditor();
+                    editor.delFromDatabase(MainActivity.mSqLiteDatabase,
                             Integer.parseInt(id));
                     String title = editTitle.getText().toString();
                     Integer quantity = Integer.parseInt(editQuantity.getText().toString());
                     String description = editDescription.getText().toString();
 
-                    String newId = "" + MainActivity.mDatabaseHelper.addToDatabase(MainActivity.mSqLiteDatabase,
-                            title, quantity, description);
+                    String newId = Long.toString(editor.addToDatabase(MainActivity.mSqLiteDatabase,
+                            title, quantity, description));
                     answerIntent.putExtra("newId", newId);
                     Request.sendRequest(Long.parseLong(id), Long.parseLong(newId), title, quantity, description);
                     finish();
@@ -70,15 +75,15 @@ public class ItemEdit extends AppCompatActivity {
     public void showById(String id) {
         String[] show = {
                 BaseColumns._ID,
-                DatabaseHelper.TITLE_COLUMN,
-                DatabaseHelper.DESCRIPTION_COLUMN,
-                DatabaseHelper.QUANTITY_COLUMN
+                DBContract.Columns.TITLE,
+                DBContract.Columns.DESCRIPTION,
+                DBContract.Columns.QUANTITY
         };
 
         Cursor c = null;
         try {
             c = MainActivity.mSqLiteDatabase.query(
-                    DatabaseHelper.DATABASE_TABLE,
+                    DBContract.DATABASE_TABLE,
                     show,
                     BaseColumns._ID + " = " + id,
                     null,
@@ -93,13 +98,13 @@ public class ItemEdit extends AppCompatActivity {
         Log.w("MyLog", "cursor found");
         c.moveToFirst();
         String title = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.TITLE_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.TITLE)
         );
         String description = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.DESCRIPTION_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.DESCRIPTION)
         );
         String quantity = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.QUANTITY_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.QUANTITY)
         );
 
         editTitle.setText(title.toCharArray(), 0, title.length());

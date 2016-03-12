@@ -12,8 +12,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.database.DBContract;
 
-public class ItemShow extends AppCompatActivity {
+public class ItemShowActivity extends AppCompatActivity {
     private TextView Title;
     private TextView Quantity;
     private TextView Description;
@@ -34,11 +35,11 @@ public class ItemShow extends AppCompatActivity {
 
         ShowById(id);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addFab = (FloatingActionButton) findViewById(R.id.fab);
+        addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ItemShow.this, ItemEdit.class);
+                Intent intent = new Intent(ItemShowActivity.this, ItemEditActivity.class);
                 intent.putExtra("id", id);
                 startActivityForResult(intent, 200);
             }
@@ -61,16 +62,16 @@ public class ItemShow extends AppCompatActivity {
     public void ShowById(String id) {
         String[] projection = {
                 BaseColumns._ID,
-                DatabaseHelper.TITLE_COLUMN,
-                DatabaseHelper.DESCRIPTION_COLUMN,
-                DatabaseHelper.QUANTITY_COLUMN
+                DBContract.Columns.TITLE,
+                DBContract.Columns.DESCRIPTION,
+                DBContract.Columns.QUANTITY
         };
 
 
         Cursor c = null;
         try {
             c = MainActivity.mSqLiteDatabase.query(
-                    DatabaseHelper.DATABASE_TABLE,
+                    DBContract.DATABASE_TABLE,
                     projection,
                     BaseColumns._ID + " = " + id,
                     null,
@@ -85,13 +86,13 @@ public class ItemShow extends AppCompatActivity {
         Log.w("MyLog", "cursor found");
         c.moveToFirst();
         String title = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.TITLE_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.TITLE)
         );
         String description = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.DESCRIPTION_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.DESCRIPTION)
         );
         String quantity = c.getString(
-                c.getColumnIndexOrThrow(DatabaseHelper.QUANTITY_COLUMN)
+                c.getColumnIndexOrThrow(DBContract.Columns.QUANTITY)
         );
 
         setResult(RESULT_OK);
