@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.R;
 import com.example.vitalik.todolist.database.DBShow;
 
 public class ItemShowActivity extends AppCompatActivity {

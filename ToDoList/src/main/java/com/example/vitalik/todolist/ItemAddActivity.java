@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.R;
 import com.example.vitalik.todolist.database.DBEditor;
 
 public class ItemAddActivity extends AppCompatActivity {

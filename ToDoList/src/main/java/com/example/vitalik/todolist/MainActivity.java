@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.R;
 import com.example.vitalik.todolist.database.DBContract;
 import com.example.vitalik.todolist.database.DBEditor;
 import com.example.vitalik.todolist.database.DBHelper;

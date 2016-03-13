@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
-import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.R;
 import com.example.vitalik.todolist.database.DBContract;
 import com.example.vitalik.todolist.database.DBShow;
 import com.google.android.gms.maps.CameraUpdateFactory;
