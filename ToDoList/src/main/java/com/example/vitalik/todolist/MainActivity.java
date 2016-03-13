@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
@@ -32,19 +31,20 @@ import com.example.vitalik.todolist.database.DBHelper;
 import com.example.vitalik.todolist.database.DBShow;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    public static DBHelper mDBHelper;
-    public static DBShow shower;
-    public static DBEditor editor;
+    private static DBHelper mDBHelper;
+    private static DBShow shower;
+    private static DBEditor editor;
     public static SQLiteDatabase mSqLiteDatabase;
-    public static SimpleCursorAdapter mAdapter;
-    public static ListView lvData;
+    private static SimpleCursorAdapter mAdapter;
+    private static ListView lvData;
     private static final int returnCode = 100;
+    private static final int DELETE_ID = 2;
+    private static final int EDIT_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mDBHelper = new DBHelper(this, DBContract.DATABASE_NAME, null, 1);
         mSqLiteDatabase = mDBHelper.getWritableDatabase();
 
@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         lvData.setAdapter(mAdapter);
         registerForContextMenu(lvData);
         getSupportLoaderManager().initLoader(0, null, this);
+
         lvData.setClickable(true);
         lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(MainActivity.this, ItemShowActivity.class);
-                Log.w("MyLog", Long.toString(mAdapter.getItemId(position)));
                 intent.putExtra("id", Long.toString(mAdapter.getItemId(position)));
                 startActivityForResult(intent, returnCode);
             }
@@ -70,13 +70,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         EditText myFilter = (EditText) findViewById(R.id.editText);
         myFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {}
 
-            public void afterTextChanged(Editable s) {
-            }
-
+            @Override
             public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
+                                          int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -110,33 +109,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == returnCode) {
-            Log.w("MyLog", "after activity");
             updateCursor();
         }
     }
 
-    public void updateCursor() {
+    private void updateCursor() {
         getSupportLoaderManager().getLoader(0).forceLoad();
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, DBContract.DELETE_ID, 0, R.string.delete_record);
-        menu.add(0, DBContract.EDIT_ID, 0, R.string.edit_record);
+        menu.add(0, DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, EDIT_ID, 0, R.string.edit_record);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == DBContract.EDIT_ID) {
+        if (item.getItemId() == EDIT_ID) {
             AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
                     .getMenuInfo();
             Intent intent = new Intent(MainActivity.this, ItemEditActivity.class);
-            intent.putExtra("id", "" + acmi.id);
-            startActivityForResult(intent, 100);
+            intent.putExtra("id", Long.toString(acmi.id));
+            startActivityForResult(intent, returnCode);
             return true;
-        } else if (item.getItemId() == DBContract.DELETE_ID) {
-            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item
-                    .getMenuInfo();
+        } else if (item.getItemId() == DELETE_ID) {
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)
+                    item.getMenuInfo();
             editor = new DBEditor();
             editor.delFromDatabase(mSqLiteDatabase, acmi.id);
             updateCursor();
@@ -177,28 +175,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (id == R.id.action_settings) {
             updateCursor();
             return true;
+        } else if (id == R.id.show_on_map) {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    static class MyCursorLoader extends CursorLoader {
-        SQLiteDatabase db;
-        public MyCursorLoader(Context context, SQLiteDatabase db) {
-            super(context);
-            this.db = db;
-        }
-        @Override
-        public Cursor loadInBackground() {
-            shower = new DBShow();
-            return shower.getAllData(mSqLiteDatabase);
-        }
-    }
-
-
     public void onDoneClick(View view) {
-        View v = (View) view.getParent();
+        View v = (View) view.getParent().getParent();
+
         TextView taskTextView = (TextView) v.findViewById(R.id.lvText);
         String task = taskTextView.getText().toString();
+
 
         String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
                 DBContract.DATABASE_TABLE,
@@ -211,4 +201,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         updateCursor();
     }
 
+
+    static class MyCursorLoader extends CursorLoader {
+        SQLiteDatabase db;
+        private MyCursorLoader(Context context, SQLiteDatabase db) {
+            super(context);
+            this.db = db;
+        }
+        @Override
+        public Cursor loadInBackground() {
+            shower = new DBShow();
+            return shower.getAllData(mSqLiteDatabase);
+        }
+    }
 }

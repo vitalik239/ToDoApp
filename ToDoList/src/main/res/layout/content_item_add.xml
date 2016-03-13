@@ -11,18 +11,6 @@
     tools:context="com.example.vitalik.todolist.ItemAddActivity">
 
     <EditText
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editTextQuantity"
-        android:hint="Enter quantity"
-        android:background="@android:drawable/editbox_background_normal"
-        android:layout_below="@+id/editTextTitle"
-        android:layout_centerHorizontal="true" />
-
-    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editTextTitle"
@@ -32,7 +20,7 @@
         android:maxLines="1"
         android:background="@android:drawable/editbox_background"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/editTextQuantity" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -45,9 +33,9 @@
         android:lines="5"
         android:maxLines="10"
         android:background="@android:drawable/editbox_background_normal"
-        android:layout_below="@+id/editTextQuantity"
-        android:layout_alignStart="@+id/editTextQuantity"
-        android:layout_alignEnd="@+id/editTextQuantity" />
+        android:layout_below="@+id/editTextTitle"
+        android:layout_alignLeft="@+id/editTextTitle"
+        android:layout_alignStart="@+id/editTextTitle" />
 
 
 </RelativeLayout>

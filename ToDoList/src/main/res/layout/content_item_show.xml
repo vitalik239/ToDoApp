@@ -13,16 +13,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/Quantity"
-        android:layout_marginTop="69dp"
-        android:background="@android:drawable/editbox_background_normal"
-        android:layout_below="@+id/Title"
-        android:layout_alignStart="@+id/Title" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/Title"
         android:ems="10"
         android:maxLength="40"
@@ -39,12 +29,11 @@
         android:ems="10"
         android:gravity="left|top"
         android:id="@+id/Description"
-        android:layout_below="@+id/Quantity"
-        android:layout_alignStart="@+id/Quantity"
-        android:layout_marginTop="49dp"
         android:lines="5"
         android:maxLines="10"
-        android:background="@android:drawable/editbox_background_normal" />
+        android:background="@android:drawable/editbox_background_normal"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,22 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Quantity"
-        android:id="@+id/textView3"
-        android:layout_alignBottom="@+id/Title"
-        android:layout_alignStart="@+id/Title"
-        android:layout_marginBottom="-70dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Description"
         android:id="@+id/textView4"
         android:layout_gravity="top"
-        android:layout_centerVertical="true"
-        android:layout_alignBottom="@+id/Title"
-        android:layout_alignStart="@+id/Title"
-        android:layout_marginBottom="-150dp" />
+        android:layout_below="@+id/Title"
+        android:layout_alignLeft="@+id/Title"
+        android:layout_alignStart="@+id/Title" />
 
 </RelativeLayout>

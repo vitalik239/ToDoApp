@@ -13,4 +13,6 @@
     <string name="title_activity_info">Info</string>
     <string name="title_activity_item_show">ItemShow</string>
     <string name="doneButtonText">Done</string>
+    <string name="show_on_map">Show on map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

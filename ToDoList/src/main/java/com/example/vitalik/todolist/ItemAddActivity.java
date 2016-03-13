@@ -1,7 +1,5 @@
 package com.example.vitalik.todolist;
 
-import com.example.vitalik.todolist.database.DBContract;
-import com.example.vitalik.todolist.database.DBEditor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.vitalik.myapplication.R;
+import com.example.vitalik.todolist.database.DBEditor;
 
 public class ItemAddActivity extends AppCompatActivity {
     private DBEditor editor;
@@ -23,7 +22,6 @@ public class ItemAddActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final EditText editTitle = (EditText) findViewById(R.id.editTextTitle);
-        final EditText editQuantity = (EditText) findViewById(R.id.editTextQuantity);
         final EditText editDescription = (EditText) findViewById(R.id.editTextDescription);
 
         setResult(RESULT_OK);
@@ -32,25 +30,21 @@ public class ItemAddActivity extends AppCompatActivity {
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editTitle.getText().length() == 0) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Enter title!", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (editQuantity.getText().length() == 0) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Enter quantity!", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else {
-                    String title = editTitle.getText().toString();
-                    Integer quantity = Integer.parseInt(editQuantity.getText().toString());
+                InputParser parser = new InputParser();
+                String title = editTitle.getText().toString();
+                if (parser.notEmpty(title)) {
                     String description = editDescription.getText().toString();
+                    Item item = new Item(title, description);
 
                     editor = new DBEditor();
 
-                    long id = editor.addToDatabase(MainActivity.mSqLiteDatabase,
-                            title, quantity, description);
-                    Request.sendRequest(-1, id, title, quantity, description);
+                    long id = editor.addToDatabase(MainActivity.mSqLiteDatabase, item);
+                    BackEndSender.sendRequest(id, item);
                     finish();
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Enter title!", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });

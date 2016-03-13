@@ -12,28 +12,15 @@
 
 
     <EditText
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editQuantity"
-        android:layout_below="@+id/editTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        android:background="@android:drawable/editbox_background_normal" />
-
-    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editTitle"
         android:ems="10"
         android:maxLength="40"
         android:maxLines="1"
-        android:layout_marginTop="111dp"
+        android:background="@android:drawable/editbox_background"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@android:drawable/editbox_background" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -42,12 +29,12 @@
         android:ems="10"
         android:gravity="left|top"
         android:id="@+id/editDescription"
-        android:layout_below="@+id/editQuantity"
-        android:layout_alignStart="@+id/editQuantity"
-        android:layout_marginTop="49dp"
         android:lines="5"
         android:maxLines="10"
-        android:background="@android:drawable/editbox_background_normal" />
+        android:background="@android:drawable/editbox_background_normal"
+        android:layout_below="@+id/editTitle"
+        android:layout_alignLeft="@+id/editTitle"
+        android:layout_alignStart="@+id/editTitle" />
 
 
 

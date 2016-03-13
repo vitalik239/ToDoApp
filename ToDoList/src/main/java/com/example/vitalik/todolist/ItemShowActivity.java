@@ -1,24 +1,22 @@
 package com.example.vitalik.todolist;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vitalik.myapplication.R;
-import com.example.vitalik.todolist.database.DBContract;
+import com.example.vitalik.todolist.database.DBShow;
 
 public class ItemShowActivity extends AppCompatActivity {
     private TextView Title;
-    private TextView Quantity;
     private TextView Description;
     private String id;
+    private static final int returnCode = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +28,17 @@ public class ItemShowActivity extends AppCompatActivity {
         id = getIntent().getStringExtra("id");
 
         Title = (TextView) findViewById(R.id.Title);
-        Quantity = (TextView) findViewById(R.id.Quantity);
         Description = (TextView) findViewById(R.id.Description);
 
-        ShowById(id);
+        ShowItemById(id);
 
-        FloatingActionButton addFab = (FloatingActionButton) findViewById(R.id.fab);
-        addFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton editItemFab = (FloatingActionButton) findViewById(R.id.fab);
+        editItemFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ItemShowActivity.this, ItemEditActivity.class);
                 intent.putExtra("id", id);
-                startActivityForResult(intent, 200);
+                startActivityForResult(intent, returnCode);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,57 +47,23 @@ public class ItemShowActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 200) {
-            Log.w("MyLog", "fail in id");
-
-            id = data.getStringExtra("newId");
-            Log.w("MyLog", "id = " + id);
-            ShowById(id);
+        if ((resultCode == RESULT_OK) && (requestCode == returnCode)) {
+            ShowItemById(id);
         }
     }
 
-    public void ShowById(String id) {
-        String[] projection = {
-                BaseColumns._ID,
-                DBContract.Columns.TITLE,
-                DBContract.Columns.DESCRIPTION,
-                DBContract.Columns.QUANTITY
-        };
-
-
-        Cursor c = null;
-        try {
-            c = MainActivity.mSqLiteDatabase.query(
-                    DBContract.DATABASE_TABLE,
-                    projection,
-                    BaseColumns._ID + " = " + id,
-                    null,
-                    null,
-                    null,
-                    ""
-            );
-        } catch (Exception ex) {
-            Log.w("MyLog", ex.toString());
-        }
-
-        Log.w("MyLog", "cursor found");
-        c.moveToFirst();
-        String title = c.getString(
-                c.getColumnIndexOrThrow(DBContract.Columns.TITLE)
-        );
-        String description = c.getString(
-                c.getColumnIndexOrThrow(DBContract.Columns.DESCRIPTION)
-        );
-        String quantity = c.getString(
-                c.getColumnIndexOrThrow(DBContract.Columns.QUANTITY)
-        );
-
+    public void ShowItemById(String id) {
         setResult(RESULT_OK);
-
-        Title.setText(title.toCharArray(), 0, title.length());
-        Quantity.setText(quantity.toCharArray(), 0, quantity.length());
-        Description.setText(description.toCharArray(), 0, description.length());
+        DBShow shower = new DBShow();
+        Item item = new Item();
+        try {
+            item = shower.getItemByID(id);
+        } catch (NullPointerException ex) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Nothing found with such ID", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        Title.setText(item.getTitle());
+        Description.setText(item.getDescription());
     }
-
-
 }

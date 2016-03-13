@@ -10,8 +10,8 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String DATABASE_CREATE_SCRIPT = "create table "
             + DBContract.DATABASE_TABLE + " (" + BaseColumns._ID
             + " integer primary key autoincrement, " + DBContract.Columns.TITLE
-            + " text not null, " + DBContract.Columns.DESCRIPTION + " integer, "
-            + DBContract.Columns.QUANTITY + " text);";
+            + " text not null, " + DBContract.Columns.DESCRIPTION + " text, "
+            + DBContract.Columns.LAT + " double," + DBContract.Columns.LNG + " double);";
 
     DBHelper(Context context) {
         super(context, DBContract.DATABASE_NAME, null, DBContract.DATABASE_VERSION);
