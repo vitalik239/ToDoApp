@@ -1,0 +1,18 @@
+<resources>
+    <!--
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=DE:73:52:B5:B2:ED:DB:F2:32:F2:8A:7F:38:11:9E:57:84:94:7B:25%3Bcom.example.vitalik.todolist
+
+    You can also add your credentials to an existing key, using this line:
+    DE:73:52:B5:B2:ED:DB:F2:32:F2:8A:7F:38:11:9E:57:84:94:7B:25;com.example.vitalik.todolist
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyA8H9xgBkxe67pWtpkEQxFM9PbhJMhID-g</string>
+</resources>
